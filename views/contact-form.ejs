@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= contact ? 'Edit Contact' : 'Add Contact' %> - Personal CRM</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/contacts" class="active">Contacts</a></li>
+                <li><a href="/tasks">Tasks</a></li>
+                <li><a href="/interactions">Interactions</a></li>
+                <li><a href="/tracks">Task Tracks</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1><%= contact ? 'Edit Contact' : 'Add Contact' %></h1>
+            <a href="/contacts" class="button secondary">Back to Contacts</a>
+        </div>
+
+        <form action="<%= contact ? `/contacts/${contact.id}/edit` : '/contacts/new' %>" method="POST" class="contact-form">
+            <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" name="name" value="<%= contact ? contact.name : '' %>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="<%= contact ? contact.email : '' %>">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" name="phone" value="<%= contact ? contact.phone : '' %>">
+            </div>
+
+            <div class="form-group">
+                <label for="organisation">Organisation</label>
+                <input type="text" id="organisation" name="organisation" value="<%= contact ? contact.organisation : '' %>">
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Notes</label>
+                <textarea id="notes" name="notes" rows="4"><%= contact ? contact.notes : '' %></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Tags</label>
+                <div class="tag-selector">
+                    <% tags.forEach(function(tag) { %>
+                        <label class="tag-checkbox">
+                            <input type="checkbox" 
+                                   name="tags[]" 
+                                   value="<%= tag.id %>"
+                                   <%= contact && contact.tags.some(t => t.id === tag.id) ? 'checked' : '' %>>
+                            <span class="tag"><%= tag.name %></span>
+                        </label>
+                    <% }); %>
+                </div>
+                <button type="button" class="button small" id="add-tag">Add New Tag</button>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="button"><%= contact ? 'Update Contact' : 'Add Contact' %></button>
+                <% if (contact) { %>
+                    <button type="button" class="button danger" id="delete-contact">Delete Contact</button>
+                <% } %>
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Personal CRM</p>
+    </footer>
+
+    <script>
+        // Add new tag functionality
+        document.getElementById('add-tag').addEventListener('click', function() {
+            const tagName = prompt('Enter new tag name:');
+            if (tagName) {
+                // In a real implementation, this would make an API call to create the tag
+                const tagSelector = document.querySelector('.tag-selector');
+                const newTag = document.createElement('label');
+                newTag.className = 'tag-checkbox';
+                newTag.innerHTML = `
+                    <input type="checkbox" name="tags[]" value="new" checked>
+                    <span class="tag">${tagName}</span>
+                `;
+                tagSelector.appendChild(newTag);
+            }
+        });
+
+        // Delete contact confirmation
+        if (document.getElementById('delete-contact')) {
+            document.getElementById('delete-contact').addEventListener('click', function() {
+                if (confirm('Are you sure you want to delete this contact?')) {
+                    fetch(`/contacts/<%= contact.id %>`, {
+                        method: 'DELETE'
+                    }).then(() => {
+                        window.location.href = '/contacts';
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Contacts - CRM</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/contacts">Contacts</a></li>
+                <li><a href="/tasks">Tasks</a></li>
+                <li><a href="/interactions">Interactions</a></li>
+                <li><a href="/task-tracks">Task Tracks</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="import-container">
+        <h1>Import Contacts</h1>
+        
+        <div class="import-form">
+            <form action="/contacts/import" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="source">Import Source</label>
+                    <select name="source" id="source" required>
+                        <option value="">Select source...</option>
+                        <option value="capsule">Capsule CRM</option>
+                        <option value="custom">Custom CSV</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="file">CSV File</label>
+                    <input type="file" name="file" id="file" accept=".csv" required>
+                    <p class="help-text">Upload a CSV file containing contact information</p>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="skip_first_row" id="skip_first_row">
+                        Skip first row (header)
+                    </label>
+                </div>
+
+                <div id="custom-mapping" style="display: none;">
+                    <h2>Field Mapping</h2>
+                    <p class="help-text">Map your CSV columns to contact fields</p>
+                    
+                    <div class="field-mapping">
+                        <div class="form-group">
+                            <label for="name">Name Column</label>
+                            <input type="text" name="mapping[name]" id="name" placeholder="Column name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Column</label>
+                            <input type="text" name="mapping[email]" id="email" placeholder="Column name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Column</label>
+                            <input type="text" name="mapping[phone]" id="phone" placeholder="Column name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="organisation">Organisation Column</label>
+                            <input type="text" name="mapping[organisation]" id="organisation" placeholder="Column name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notes">Notes Column</label>
+                            <input type="text" name="mapping[notes]" id="notes" placeholder="Column name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tags">Tags Column</label>
+                            <input type="text" name="mapping[tags]" id="tags" placeholder="Column name">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Import Contacts</button>
+                    <a href="/contacts" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="preview-section">
+            <h2>Preview</h2>
+            <p class="help-text">First 5 rows of your CSV will be shown here</p>
+            <div id="preview-table"></div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 CRM Tool</p>
+    </footer>
+
+    <script>
+        document.getElementById('source').addEventListener('change', function() {
+            const customMapping = document.getElementById('custom-mapping');
+            customMapping.style.display = this.value === 'custom' ? 'block' : 'none';
+        });
+
+        document.getElementById('file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const text = e.target.result;
+                    const rows = text.split('\n').slice(0, 6); // Get first 5 rows + header
+                    const table = document.createElement('table');
+                    
+                    rows.forEach((row, index) => {
+                        const tr = document.createElement('tr');
+                        row.split(',').forEach(cell => {
+                            const td = document.createElement('td');
+                            td.textContent = cell;
+                            tr.appendChild(td);
+                        });
+                        table.appendChild(tr);
+                    });
+                    
+                    document.getElementById('preview-table').innerHTML = '';
+                    document.getElementById('preview-table').appendChild(table);
+                };
+                reader.readAsText(file);
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opportunities - CRM</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/contacts">Contacts</a></li>
+                <li><a href="/opportunities" class="active">Opportunities</a></li>
+                <li><a href="/projects">Projects</a></li>
+                <li><a href="/tasks">Tasks</a></li>
+                <li><a href="/interactions">Interactions</a></li>
+                <li><a href="/task-tracks">Task Tracks</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1>Opportunities</h1>
+            <a href="/opportunities/import" class="button">Import Opportunities</a>
+        </div>
+
+        <div class="opportunities-list">
+            <% if (opportunities && opportunities.length > 0) { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Probability</th>
+                            <th>Value</th>
+                            <th>Expected Close</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% opportunities.forEach(opportunity => { %>
+                            <tr>
+                                <td><%= opportunity.name %></td>
+                                <td><%= opportunity.contact_name || 'N/A' %></td>
+                                <td><%= opportunity.status || 'N/A' %></td>
+                                <td><%= opportunity.probability || 'N/A' %></td>
+                                <td>
+                                    <% if (opportunity.value) { %>
+                                        <%= opportunity.value %>
+                                        <%= opportunity.currency || '' %>
+                                    <% } else { %>
+                                        N/A
+                                    <% } %>
+                                </td>
+                                <td><%= opportunity.expected_close_date || 'N/A' %></td>
+                                <td>
+                                    <a href="/opportunities/<%= opportunity.id %>" class="button small">View</a>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>No opportunities found. <a href="/opportunities/import">Import some opportunities</a> to get started.</p>
+            <% } %>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 CRM Tool</p>
+    </footer>
+</body>
+</html> 

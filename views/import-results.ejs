@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Results - Personal CRM</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/contacts" class="active">Contacts</a></li>
+                <li><a href="/tasks">Tasks</a></li>
+                <li><a href="/interactions">Interactions</a></li>
+                <li><a href="/tracks">Task Tracks</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1>Import Results</h1>
+            <a href="/contacts" class="button secondary">Back to Contacts</a>
+        </div>
+
+        <div class="results-container">
+            <div class="results-summary">
+                <h2>Import Summary</h2>
+                <div class="summary-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Records:</span>
+                        <span class="stat-value"><%= totalCount %></span>
+                    </div>
+                    <div class="stat-item success">
+                        <span class="stat-label">Successfully Imported:</span>
+                        <span class="stat-value"><%= successCount %></span>
+                    </div>
+                    <div class="stat-item <%= errorCount > 0 ? 'error' : '' %>">
+                        <span class="stat-label">Failed:</span>
+                        <span class="stat-value"><%= errorCount %></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-actions">
+                <a href="/contacts" class="button">View Contacts</a>
+                <a href="/contacts/import" class="button secondary">Import More</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Personal CRM</p>
+    </footer>
+</body>
+</html> 

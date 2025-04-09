@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacts - Personal CRM</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/contacts" class="active">Contacts</a></li>
+                <li><a href="/tasks">Tasks</a></li>
+                <li><a href="/interactions">Interactions</a></li>
+                <li><a href="/tracks">Task Tracks</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1>Contacts</h1>
+            <div class="header-actions">
+                <a href="/contacts/new" class="button">Add Contact</a>
+                <a href="/contacts/import" class="button secondary">Import Contacts</a>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search contacts..." class="search-input">
+            </div>
+            <div class="tag-filters">
+                <select id="tag-filter" class="tag-select">
+                    <option value="">All Tags</option>
+                    <% tags.forEach(function(tag) { %>
+                        <option value="<%= tag.id %>"><%= tag.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+        </div>
+
+        <div class="contacts-list">
+            <% contacts.forEach(function(contact) { %>
+                <div class="contact-card" data-contact-id="<%= contact.id %>">
+                    <div class="contact-header">
+                        <h3><%= contact.name %></h3>
+                        <div class="contact-actions">
+                            <a href="/contacts/<%= contact.id %>/edit" class="button small">Edit</a>
+                            <a href="/contacts/<%= contact.id %>/interactions" class="button small">View History</a>
+                        </div>
+                    </div>
+                    <div class="contact-details">
+                        <% if (contact.email) { %>
+                            <p><strong>Email:</strong> <%= contact.email %></p>
+                        <% } %>
+                        <% if (contact.phone) { %>
+                            <p><strong>Phone:</strong> <%= contact.phone %></p>
+                        <% } %>
+                        <% if (contact.organisation) { %>
+                            <p><strong>Organisation:</strong> <%= contact.organisation %></p>
+                        <% } %>
+                        <% if (contact.notes) { %>
+                            <p><strong>Notes:</strong> <%= contact.notes %></p>
+                        <% } %>
+                    </div>
+                    <div class="contact-tags">
+                        <% contact.tags.forEach(function(tag) { %>
+                            <span class="tag"><%= tag.name %></span>
+                        <% }); %>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Personal CRM</p>
+    </footer>
+
+    <script>
+        // Simple client-side search functionality
+        document.getElementById('search').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const contacts = document.querySelectorAll('.contact-card');
+            
+            contacts.forEach(contact => {
+                const text = contact.textContent.toLowerCase();
+                contact.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+
+        // Tag filter functionality
+        document.getElementById('tag-filter').addEventListener('change', function(e) {
+            const selectedTag = e.target.value;
+            const contacts = document.querySelectorAll('.contact-card');
+            
+            contacts.forEach(contact => {
+                if (!selectedTag) {
+                    contact.style.display = 'block';
+                    return;
+                }
+                
+                const tags = contact.querySelectorAll('.tag');
+                let hasTag = false;
+                tags.forEach(tag => {
+                    if (tag.dataset.tagId === selectedTag) {
+                        hasTag = true;
+                    }
+                });
+                
+                contact.style.display = hasTag ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html> 

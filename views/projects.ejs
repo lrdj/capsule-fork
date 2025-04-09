@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - CRM</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/contacts">Contacts</a></li>
+                <li><a href="/opportunities">Opportunities</a></li>
+                <li><a href="/projects" class="active">Projects</a></li>
+                <li><a href="/tasks">Tasks</a></li>
+                <li><a href="/interactions">Interactions</a></li>
+                <li><a href="/task-tracks">Task Tracks</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1>Projects</h1>
+            <a href="/projects/import" class="button">Import Projects</a>
+        </div>
+
+        <div class="projects-list">
+            <% if (projects && projects.length > 0) { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Expected Close</th>
+                            <th>Closed Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% projects.forEach(project => { %>
+                            <tr>
+                                <td><%= project.name %></td>
+                                <td><%= project.contact_name || 'N/A' %></td>
+                                <td><%= project.status || 'N/A' %></td>
+                                <td><%= project.expected_close_date || 'N/A' %></td>
+                                <td><%= project.closed_date || 'N/A' %></td>
+                                <td>
+                                    <a href="/projects/<%= project.id %>" class="button small">View</a>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <p>No projects found. <a href="/projects/import">Import some projects</a> to get started.</p>
+            <% } %>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 CRM Tool</p>
+    </footer>
+</body>
+</html> 
